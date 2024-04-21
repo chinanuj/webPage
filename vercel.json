@@ -1,17 +1,18 @@
 {
-  "version" :2,
-  "builds":[
+  "version": 2,
+  "builds": [
     {
-      "src": "./index.py",
-      "use" : "@vercel/python",
-      "config": {"runtime":"python3.11.5"}
+      "src": "app.py",
+      "use": "@vercel/python"
     }
   ],
-  "routes":[
-
+  "routes": [
     {
-      "src":"/(.*)",
-      "dest":"/"
+      "src": "/(.*)",
+      "dest": "app.py"
     }
-  ]
+  ],
+  "env": {
+    "FLASK_ENV": "production"
+  }
 }
