@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+</head>
+
+<style>
+    /* CSS for the main page */
+    body {
+    font-family: 'Playfair Display', serif; /* Elegant and sophisticated for headings */
+        margin: 0;
+        padding: 0;
+        background-image: url("https://imgs.search.brave.com/fTcy2E3aOtQuYghRu26y93p1NgMUbSY4qPW1aq-MLoA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9yZXBv/c2l0b3J5LWltYWdl/cy5naXRodWJ1c2Vy/Y29udGVudC5jb20v/Mjc1MzM2NTIxLzIw/ZDM4ZTAwLTY2MzQt/MTFlYi05ZDFmLTZh/NTIzMmQwZjg0Zg"); /* Add background image */
+        background-size: cover;
+        background-position: center;
+    }
+
+    .container {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* Align items vertically */
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 60px; /* Increase heading size */
+        margin-bottom: 20px; /* Add margin */
+        text-align: center;
+    }
+
+    .search-bar {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-bar input[type="text"] {
+        width: 500px; /* Adjusted width */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px; /* Add margin between input and buttons */
+    }
+
+    .search-bar button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: transform 0.3s ease; /* Add animation */
+        margin-top: 10px;
+        text-decoration: none; /* Remove underline */
+        font-size: 15px; /* Increase font size */
+        font-style: italic;
+        margin-right: 10px; /* Add margin between buttons */
+    }
+
+    .search-bar button:hover {
+        box-shadow: 0 0.5em 0.5em -0.4em ;
+        transform: translateY(-0.25em);
+        color:white;
+    }
+    .search-bar button:focus{
+        box-shadow: 0 0.5em 0.5em -0.4em ;
+        transform: translateY(-0.25em);
+    }
+
+    .search-bar a {
+        color: white;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+        margin-top: 10px; /* Add margin between link and buttons */
+        font-style: italic;
+    }
+
+    .search-bar a:hover {
+        opacity: 0.5;
+    }
+
+    /* Search page styles */
+    .search-container {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        background-image: url("https://imgs.search.brave.com/fTcy2E3aOtQuYghRu26y93p1NgMUbSY4qPW1aq-MLoA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9yZXBv/c2l0b3J5LWltYWdl/cy5naXRodWJ1c2Vy/Y29udGVudC5jb20v/Mjc1MzM2NTIxLzIw/ZDM4ZTAwLTY2MzQt/MTFlYi05ZDFmLTZh/NTIzMmQwZjg0Zg"); /* Add background image */
+        background-size: cover;
+        background-position: center;
+    }
+
+    .search-container h1 {
+        font-size: 60px;
+        margin-bottom: 20px;
+    }
+
+    .movie-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.movie-item {
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
+
+    .search-container .search-form {
+        margin-top: 20px;
+    }
+
+    .search-container .search-form input[type="text"] {
+        width: 500px;
+        padding: 8px;
+        display:block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .search-container .search-form button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease; /* Add animation */
+        margin-top: 10px;
+        text-decoration: none; /* Remove underline */
+        font-size: 15px; /* Increase font size */
+        font-style: italic;
+        margin-right: 10px; /* Add margin between buttons */
+    }
+
+
+    .search-container .search-form button:last-child {
+        margin-right: 0; /* Remove margin from the last button */
+    }
+
+    .search-container .search-form button:hover {
+        box-shadow: 0 0.5em 0.5em -0.4em ;
+        transform: translateY(-0.25em);
+        border-color: #007bff;
+
+    }
+    .search-container .search-form button:focus{
+        box-shadow: 0 0.5em 0.5em -0.4em ;
+        transform: translateY(-0.25em);
+         outline: none;
+         border-color: whitesmoke; /* Change border color to whitesmoke when button is active */
+    }
+
+
+    .container .userid a {
+        color: white;
+        opacity:0.8;
+        cursor: pointer;
+    }
+
+    .container .userid a:active{
+        opacity: 0.5;
+    }
+
+
+    /* Tab styles */
+    .tabs-container {
+        position: absolute;
+        top: 0;
+        width: 1189px;
+        display: flex;
+        justify-content: space-between;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px 0;
+    }
+
+    .tab {
+        flex: 1;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px 5px 0 0;
+        cursor: pointer;
+    }
+
+    .tab:hover {
+        background-color: white;
+    }
+
+    .tab.active {
+        background-color: #007bff;
+    }
+
+    /* Common hover effect for all buttons and tabs */
+.btn,
+.tab {
+    transition: 0.3s;
+}
+
+
+
+.btn:hover,
+.tab:hover {
+    transform: scale(1.05);
+}
+
+
+/* Hover effect on UserId link */
+.container .userid a {
+    transition: opacity 0.3s ease;
+}
+
+.container .userid a:hover {
+    opacity: 0.5;
+}
+
+/* Hover effect on all tabs */
+.tab {
+    transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #007bff; /* Change background color to blue on hover */
+}
+
+ /* Active tab */
+.tab.active {
+    background-color: #007bff; /* Keep active tab blue */
+}
+
+
+.movie-recommendation img {
+    width: 100%; /* Ensure the image fills the container */
+}
+.movie-recommendation {
+    max-width: 100%; /* Set maximum width for each recommendation */
+}
+
+.recommended-movies {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 2 columns */
+    grid-gap: 20px; /* Gap between grid items */
+}
+
+/* Style for the movie grid container */
+.movie-grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-gap:80px; /* Spacing between grid items */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-left: 200px;
+    margin-top:40px;
+}
+
+/* Style for each movie item in the grid */
+.movie-item-home {
+    max-width: 500px; /* Max width for each movie item */
+    text-align: center; /* Center-align the content */
+}
+
+/* Style for movie posters */
+.movie-poster-home {
+    width: 200px; /* Ensure poster fills the container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Add border radius for poster */
+}
+
+/* Style for movie titles */
+.movie-title-home {
+    margin-top: 10px; /* Add some space between poster and title */
+    font-size: 14px; /* Adjust font size */
+}
+
+
+
+</style>
+<body>
+    <!-- Homepage -->
+    <div class="container">
+        <div class="tabs-container">
+            <div class="tab active" id="user_tab">UserId</div>
+            <div class="tab" id="name_tab">Name</div>
+        </div>
+        <h1>Movie Recommendation System</h1>
+        <div class="search-bar">
+            <input type="text" id="user_id1" placeholder="Enter UserId">
+            <button type="button" class="btn" id="get_recommendations_home">Get Recommendations</button>
+            <button type="button" class="btn" id="reset_results_home">Reset</button>
+        </div>
+         <div class="movie-grid-container">
+        <!-- Recommended Movies Section -->
+        <div class="movie-grid-container" id="recommended_movies_home">
+            <!-- Recommended movies will be displayed here -->
+        </div>
+    </div>
+    </div>
+
+    <!-- Search Page for Movie Name -->
+    <div class="search-container" style="display: none;">
+        <div class="tabs-container">
+            <div class="tab active" id="user_tab2">UserId</div>
+            <div class="tab" id="name_tab2">Name</div>
+        </div>
+        <h1>Enter Movie Name</h1>
+        <div class="search-form">
+            <input type="text" id="movie_name" placeholder="Enter Movie Name" required>
+            <button type="button"  id="get_movie_recommendations">Get Recommendations</button>
+            <br>
+            <button type="button"  id="reset_movie_results">Reset</button>
+        </div>
+        <div class="recommended-movies"></div>
+    </div>
+
+
+    <!-- Script tags -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+    // Variable to keep track of the active tab
+    var activeTab = "user_tab";
+
+    // Function to handle tab switching
+    $(".tab").click(function() {
+        var clickedTab = $(this).attr("id");
+
+        // Only proceed if the clicked tab is different from the currently active tab
+        if (clickedTab !== activeTab) {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+
+            // Update the active tab
+            activeTab = clickedTab;
+
+            // Toggle visibility of search containers based on the active tab
+            if (activeTab === "user_tab") {
+                $(".container").show();
+                $(".search-container").hide();
+            } else if (activeTab === "genre_rating_tab") {
+                $(".container").hide();
+                $(".search-container").hide();
+                $(".search-container:eq(1)").show(); // Show the Genre and Rating search container
+            } else {
+                $(".container").hide();
+                $(".search-container").show(); // Show the Name search container
+            }
+        }
+    });
+
+
+        // Clear input field and recommendations for Movie Name search
+        $("#reset_movie_results").click(function() {
+            $("#movie_name").val("");
+            $(".recommended-movies").empty();
+        });
+
+        // Clear input fields for Genre and Rating search
+        $("#reset_genre_rating_results").click(function() {
+            $("#genre").val("");
+            $("#rating").val("");
+        });
+
+        // Function to fetch autocomplete suggestions
+        function fetchAutocomplete() {
+            $.ajax({
+                url: '/autocomplete',
+                type: 'GET',
+                success: function(data) {
+                    // Initialize autocomplete
+                    $("#movie_name").autocomplete({
+                        source: data
+                    });
+                }
+            });
+        }
+
+        // Initialize autocomplete on page load
+        fetchAutocomplete();
+
+                // Function to handle click event on get recommendations button for movie name
+       // Function to handle click event on get recommendations button for movie name
+// Function to handle click event on get recommendations button for movie name
+// Function to handle click event on get recommendations button for movie name
+// Function to handle click event on get recommendations button for movie name
+// Function to handle click event on get recommendations button for movie name
+// Function to handle click event on get recommendations button for movie name
+$("#get_movie_recommendations").click(function() {
+    var movieName = $("#movie_name").val();
+    if (movieName.trim() !== "") {
+        // Make AJAX request to Flask server to get recommended movies
+        $.ajax({
+            url: '/recommend_movies',
+            type: 'POST',
+            data: { movie_name: movieName },
+            success: function(data) {
+                // Clear any previous recommendations
+                $(".recommended-movies").empty();
+
+                // Check if any recommendations were returned
+                if (data.length > 0) {
+                    // Iterate over each recommended movie
+                    data.forEach(function(movie) {
+                        // Fetch poster URL for each movie using the get_movie_poster_url function
+                        var tmdb_id = movie[1]; // Assuming movie[1] contains the TMDB movie ID
+                        get_movie_poster_url(tmdb_id, function(posterUrl) {
+                            // Check if poster URL is available
+                            if (posterUrl) {
+                                // Create HTML content for movie recommendation with poster
+                                var recommendationHtml = "<div class='movie-recommendation'><img src='" + posterUrl + "' alt='" + movie[0] + "'><p>" + movie[0] + "</p></div>";
+                                // Append recommendation to the page
+                                $(".recommended-movies").append(recommendationHtml);
+                            } else {
+                                // If no poster URL available, only display movie name
+                                $(".recommended-movies").append("<p>" + movie[0] + "</p>");
+                            }
+                        });
+                    });
+                } else {
+                    // Display message if no recommendations were found
+                    $(".recommended-movies").html("<p>No recommendations found for '" + movieName + "'.</p>");
+                }
+            },
+            error: function() {
+                $(".recommended-movies").html("<p>An error occurred while fetching recommendations.</p>");
+            }
+        });
+    } else {
+        alert("Please enter a movie name."); // Alert if search bar is empty
+    }
+});
+
+// Function to fetch movie poster URL for a given TMDB ID
+function get_movie_poster_url(tmdb_id, callback) {
+    // TMDb API base URL and API key (replace 'YOUR_API_KEY' with your actual API key)
+    var base_url = "https://api.themoviedb.org/3";
+    var api_key = "cebff0ded35e48388de25551bebeec40";
+
+    // Endpoint for searching movies by ID
+    var endpoint = `${base_url}/movie/${tmdb_id}`;
+
+    // Parameters for the request (including API key)
+    var params = {
+        api_key: api_key
+    };
+
+    // Send GET request to TMDb API
+    $.get(endpoint, params)
+        .done(function(response) {
+            // Parse JSON response
+            var movie_data = response;
+
+            // Extract poster URL from the response
+            var poster_path = movie_data.poster_path;
+
+            // Construct full poster URL
+            if (poster_path) {
+                var poster_url = `https://image.tmdb.org/t/p/w500/${poster_path}`;
+                callback(poster_url);
+            } else {
+                callback(null);
+            }
+        })
+        .fail(function(error) {
+            console.error("Error fetching movie poster:", error);
+            callback(null);
+        });
+}
+$(document).ready(function () {
+    // Function to display recommended movies
+    function displayRecommendedMovies(movies) {
+        // Clear any previous recommendations
+        $("#recommended_movies_home").empty();
+
+        // Iterate over each recommended movie
+        movies.forEach(function(movie) {
+            // Fetch poster URL for each movie using the get_movie_poster_url function
+            var tmdb_id = movie[1]; // Assuming movie[1] contains the TMDB movie ID
+            get_movie_poster_url(tmdb_id, function(posterUrl) {
+                // Check if poster URL is available
+                if (posterUrl) {
+                    // Create HTML content for movie recommendation with poster
+                    var recommendationHtml = "<div class='movie-item-home'><a href='https://www.themoviedb.org/movie/" + tmdb_id + "' target='_blank'><img src='" + posterUrl + "' alt='" + movie[0] + "' class='movie-poster-home'></a><p>" + movie[0] + "</p></div>";
+                    // Append recommendation to the page
+                    $("#recommended_movies_home").append(recommendationHtml);
+                } else {
+                    // If no poster URL available, only display movie name
+                    $("#recommended_movies_home").append("<div class='movie-item-home'><p>" + movie[0] + "</p></div>");
+                }
+            });
+        });
+    }
+
+    // Event listener for Get Recommendations button
+    $("#get_recommendations_home").click(function () {
+        var userId = $("#user_id1").val();
+        // Check if user has entered a search query
+        if (!userId.trim()) {
+            // Display alert message if search box is empty
+            alert("Please enter a user ID to get recommendations.");
+            return; // Stop further execution
+        }
+        // Send a POST request to get recommendations
+        $.post("/user_recommendations", { user_id: userId }, function (data) {
+            // Display recommended movies on the homepage
+            displayRecommendedMovies(data.movies);
+        });
+    });
+
+    // Reset button event listener
+    $("#reset_results_home").click(function () {
+        $("#user_id1").val("");
+        $("#recommended_movies_home").empty();
+    });
+});
+
+
+        // // Reset button functionality on the homepage
+        // $("#reset_results_home").click(function() {
+        //     $("#recommended_movies_home").empty();
+        //     $("#user_id1").val("");
+        // });
+
+        // Home button action
+        $(".home-button").click(function() {
+            $(".container").show();
+            $(".search-container").hide();
+        });
+
+        // User tab action (Return to homepage)
+        $("#user_tab").click(function() {
+            $(".container").show();
+            $(".search-container").hide();
+        });
+
+        // User tab action on the search page (Return to homepage)
+        $("#user_tab2, #user_tab3").click(function() {
+            $(".container").show();
+            $(".search-container").hide();
+        });
+
+        $("#name_tab").click(function() {
+            $(".search-container").show();
+        });
+    });
+</script>
+
+</body>
+</html>
